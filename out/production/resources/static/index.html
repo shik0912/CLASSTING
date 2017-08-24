@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.js"></script>
+    <script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.14.3.js"></script>
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css" rel="stylesheet" >
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">-->
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">-->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>-->
+    <script src="js/myApp.js"></script>
+</head>
+
+<title>클래스팅</title>
+<body ng-controller="DashboardController">
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">대시보드</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href ng-click="setTab(1)">총 가입자 지표</a></li>
+                <li><a href ng-click="setTab(2)">활성 사용자 지표</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<br>
+<br>
+<div class="container-fluid">
+    <div ng-show="tab==1" class="row" style="width:1200px; margin:auto;">
+        <div class="col-lg-4" style="width:1200px; margin:0px 0px;">
+            <h1 class="page-header">총 가입자 지표</h1>
+            <br>
+
+            <h2 class="sub-header">그래프 (최근 7일)</h2>
+            <div id="chartTotalSignedUp"></div>
+
+            <h2 class="sub-header">테이블</h2>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th style="text-align:center">#</th>
+                        <th style="text-align:center">날짜</th>
+                        <th style="text-align:center">가입자</th>
+                        <th style="text-align:center">탈퇴자</th>
+                        <th style="text-align:center">총 가입자 수</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="user in users">
+                        <td style="text-align:center">{{ user.index }}</td>
+                        <td style="text-align:center">{{ user.key_as_string }}</td>
+                        <td style="text-align:center">{{ user.doc_signedup }}</td>
+                        <td style="text-align:center">{{ user.doc_deleted }}</td>
+                        <td style="text-align:center">{{ user.doc_total }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div ng-show="tab==2" class="row" style="width:1200px; margin:auto;">
+        <div class="col-md-4" style="width:1200px; margin:0px 0px;">
+            <h1 class="page-header">활성 사용자 지표</h1>
+            <br>
+
+            <!-- Filter -->
+            <div>
+                <div style="width:30%;float:left;"><div style="width:80%;margin:0 auto;text-align:center">시작날짜</div></div>
+                <div style="width:30%;float:left;"><div style="width:80%;margin:0 auto;text-align:center">종료날짜</div></div>
+                <div style="width:20%;float:left"><div style="width:80%;margin:0 auto;text-align:center">직업</div></div>
+                <div style="width:20%;float:left"><div style="width:80%;margin:0 auto;text-align:center">국가</div></div>
+            </div>
+            <div>
+                <div style="width:30%;float:left;">
+                    <p class="input-group" style="width:80%;margin:0 auto">
+                        <input type="text" class="form-control date-picker" uib-datepicker-popup="{{format}}" ng-model="selMinDate" is-open="minStatus.opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" ng-required="true"
+                               close-text="Close" ng-change="selectedMinDate(selMinDate)" style="text-align:center"/>
+                        <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="minOpen($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </p>
+                </div>
+                <div style="width:30%;float:left">
+                    <p class="input-group" style="width:80%;margin:0 auto">
+                        <input type="text" class="form-control date-picker" uib-datepicker-popup="{{format}}" ng-model="selMaxDate" is-open="maxStatus.opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" ng-required="true"
+                               close-text="Close" ng-change="selectedMaxDate(selMaxDate)" style="text-align:center"/>
+                        <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="maxOpen($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </p>
+                </div>
+                <div style="width:20%;float:left">
+                    <div style="width:80%;margin:0 auto">
+                        <select class="form-control" style="text-align:center;" ng-model="role" ng-options="opt for opt in options.role" ng-change="selectedRole(role)"></select>
+                    </div>
+
+                </div>
+                <div style="width:20%;float:left">
+                    <div style="width:80%;margin:0 auto">
+                        <select class="form-control" style="text-align:center;" ng-model="country" ng-options="opt for opt in options.country" ng-change="selectedCountry(country)"></select>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="sub-header" style="margin-top:2.5cm;">그래프</h2>
+            <div class="table-responsive" id="chartActive">
+            </div>
+
+            <h2 class="sub-header">테이블</h2>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th style="text-align:center">#</th>
+                        <th style="text-align:center">DAU</th>
+                        <th style="text-align:center">WAU</th>
+                        <th style="text-align:center">MAU</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td style="text-align:center">최대</td>
+                        <td style="text-align:center">{{ detailActive.DAU.max }}</td>
+                        <td style="text-align:center">{{ detailActive.WAU.max }}</td>
+                        <td style="text-align:center">{{ detailActive.MAU.max }}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center">최소</td>
+                        <td style="text-align:center">{{ detailActive.DAU.min }}</td>
+                        <td style="text-align:center">{{ detailActive.WAU.min }}</td>
+                        <td style="text-align:center">{{ detailActive.MAU.min }}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center">평균</td>
+                        <td style="text-align:center">{{ detailActive.DAU.avg }}</td>
+                        <td style="text-align:center">{{ detailActive.WAU.avg }}</td>
+                        <td style="text-align:center">{{ detailActive.MAU.avg }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th style="text-align:center">#</th>
+                        <th style="text-align:center">날짜</th>
+                        <th style="text-align:center">DAU 전주대비</th>
+                        <th style="text-align:center">DAU</th>
+                        <th style="text-align:center">WAU</th>
+                        <th style="text-align:center">MAU</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="active in actives">
+                        <td style="text-align:center">{{ active.index }}</td>
+                        <td style="text-align:center">{{ active.key_as_string }}</td>
+                        <td style="text-align:center">{{ active.doc_bt_dau }}</td>
+                        <td style="text-align:center">{{ active.doc_dau }}</td>
+                        <td style="text-align:center">{{ active.doc_wau }}</td>
+                        <td style="text-align:center">{{ active.doc_mau }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
