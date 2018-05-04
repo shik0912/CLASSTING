@@ -1,3 +1,5 @@
+//test
+
 var myApp = angular.module("myApp", ['ngAnimate', 'ui.bootstrap']);
 
 myApp.controller("DashboardController", function($scope, $http) {
